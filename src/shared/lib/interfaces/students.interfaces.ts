@@ -18,7 +18,7 @@ export type IResponseStudentDetail = IStudent;
 
 export interface IRequestCreateStudent {
   user_id: string;
-  class_id: string;
+  class_id?: string;
   nim: string;
 }
 

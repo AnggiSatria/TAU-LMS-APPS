@@ -18,7 +18,7 @@ export type IResponseTeacherDetail = ITeacher;
 
 export interface IRequestCreateTeacher {
   user_id: string;
-  class_id: string;
+  class_id?: string;
   nip: string;
 }
 
