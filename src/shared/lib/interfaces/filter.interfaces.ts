@@ -1,3 +1,3 @@
 export interface listFilter {
-  search: "string";
+  search: string;
 }

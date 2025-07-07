@@ -11,6 +11,7 @@ import Link from "next/link";
 import { Toaster, toast } from "sonner";
 import { useLogin } from "@/shared/lib/services/auth/login/hooks";
 import { BeatLoader } from "react-spinners";
+import { useRouter } from "next/navigation";
 
 const override: CSSProperties = {
   display: "block",
@@ -27,6 +28,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -36,11 +38,19 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const { mutations: loginMutations } = useLogin(setLoading);
+  const handleNavigate = () => {
+    router.push(`/dashboard`);
+  };
+
+  const { mutations: loginMutations } = useLogin({
+    setLoading: setLoading,
+    navigate: handleNavigate,
+  });
 
   const onSubmit = async (data: LoginForm) => {
     setLoading(true);
-    await loginMutations.mutateAsync(data);
+    const res = await loginMutations.mutateAsync(data);
+    localStorage.setItem(`userData`, JSON.stringify(res?.data?.user));
     setLoading(false);
   };
 
