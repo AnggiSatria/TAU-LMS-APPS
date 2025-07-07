@@ -9,4 +9,5 @@ export const ENDPOINT = {
   classMembers: "/class-members",
   tasks: "/tasks",
   assignments: "/assignments",
+  profile: "/profile",
 };
