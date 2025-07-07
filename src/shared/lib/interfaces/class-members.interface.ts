@@ -12,7 +12,16 @@ export interface IClassMember {
   class: IClass;
 }
 
+export interface IClassMemberByUserId {
+  id: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export type IResponseClassMemberList = IClassMember[];
+
+export type IResponseClassMemberByUserIdList = IClassMemberByUserId[];
 
 export type IResponseClassMemberDetail = IClassMember;
 

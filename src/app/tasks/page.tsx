@@ -1,9 +1,23 @@
 "use client";
+import { IResponseTaskDetail } from "@/shared/lib/interfaces/tasks.interfaces";
+import { useReadTaskByUserId } from "@/shared/lib/services/tasks/hooks";
 import { useReadUserProfile } from "@/shared/lib/services/users/hooks";
 // app/tugas/page.tsx
 import Sidebar from "@/shared/ui/components/organism";
+import { CreateTaskForm } from "@/shared/ui/components/template/CreateTaskForm";
+import { useModal } from "@/shared/ui/context/ModalContext";
+import dayjs from "dayjs";
+import { CSSProperties } from "react";
+import { ClockLoader } from "react-spinners";
+
+const override: CSSProperties = {
+  display: "block",
+  margin: "0 auto",
+  borderColor: "red",
+};
 
 export default function TaskPage() {
+  const { showModal } = useModal();
   const activeFilter = {
     search: "",
   };
@@ -12,12 +26,25 @@ export default function TaskPage() {
     activeFilter: activeFilter,
   });
 
+  const {
+    data: dataTaskByUserId,
+    refetch,
+    isLoading: loading,
+  } = useReadTaskByUserId({
+    activeFilter: { search: "" },
+    userId: profile?.data?.id,
+  });
+
+  const taskByUserId = dataTaskByUserId?.data;
+
+  console.log(taskByUserId);
+
   const userProfile = profile?.data;
 
   const role = userProfile?.role;
 
   const handleCreateClass = () => {
-    alert("Redirect ke form pembuatan kelas");
+    showModal(<CreateTaskForm refetch={refetch} profile={userProfile} />);
   };
 
   return (
@@ -36,20 +63,29 @@ export default function TaskPage() {
           )}
         </div>
 
-        <ul className="space-y-4">
-          {[
-            { title: "Tugas 1 - Matematika", due: "10 Juli 2025" },
-            { title: "Tugas 2 - Biologi", due: "12 Juli 2025" },
-            { title: "Tugas 3 - Sejarah", due: "15 Juli 2025" },
-          ].map((task, idx) => (
-            <li key={idx} className="bg-white p-4 rounded-xl shadow">
-              <h2 className="text-lg font-semibold text-blue-600">
-                {task.title}
-              </h2>
-              <p className="text-sm text-gray-600">Deadline: {task.due}</p>
-            </li>
-          ))}
-        </ul>
+        <ClockLoader
+          color={"#0a0a0a"}
+          loading={loading}
+          cssOverride={override}
+          size={150}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+
+        {!loading && (
+          <ul className="space-y-4">
+            {taskByUserId?.map((task: IResponseTaskDetail, idx: number) => (
+              <li key={idx} className="bg-white p-4 rounded-xl shadow">
+                <h2 className="text-lg font-semibold text-blue-600">
+                  {task?.name}
+                </h2>
+                <p className="text-sm text-gray-600">
+                  Deadline: {dayjs(task?.due_date).format(`DD MMMM YYYY`)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
       </main>
     </div>
   );

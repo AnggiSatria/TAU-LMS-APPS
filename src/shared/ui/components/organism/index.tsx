@@ -1,85 +1,3 @@
-// // components/organism/Sidebar.tsx
-// "use client";
-
-// import { useState } from "react";
-// import { Menu, BookOpen, Users } from "lucide-react";
-// import Link from "next/link";
-// import { usePathname } from "next/navigation";
-// import clsx from "clsx";
-// import Image from "next/image";
-
-// export default function Sidebar() {
-//   const [open, setOpen] = useState(false);
-//   const pathname = usePathname();
-
-//   const menuItems = [
-//     {
-//       name: "Dashboard",
-//       icon: <BookOpen className="w-5 h-5" />,
-//       href: "/dashboard",
-//     },
-//     {
-//       name: "My Class",
-//       icon: <Users className="w-5 h-5" />,
-//       href: "/classes",
-//     },
-//     {
-//       name: "Task",
-//       icon: <BookOpen className="w-5 h-5" />,
-//       href: "/tasks",
-//     },
-//   ];
-
-//   return (
-//     <div
-//       className={`h-screen bg-white shadow-md ${
-//         open ? "w-64" : "w-20"
-//       } transition-all duration-300 flex flex-col`}
-//     >
-//       {/* Header */}
-//       <div className="flex items-center justify-between p-4">
-//         {open && (
-//           <div className="flex items-center gap-2">
-//             <Image
-//               src="/assets/images/logo-tau.png" // Pastikan logo ini ada di folder public/
-//               alt="Logo Kampus"
-//               width={32}
-//               height={32}
-//             />
-//             <span className="text-xl font-bold text-blue-600">TAU LMS</span>
-//           </div>
-//         )}
-
-//         <button
-//           onClick={() => setOpen(!open)}
-//           className="text-gray-600 cursor-pointer"
-//         >
-//           <Menu className="w-6 h-6 cursor-pointer" />
-//         </button>
-//       </div>
-
-//       {/* Menu Items */}
-//       <ul className="mt-4 space-y-1">
-//         {menuItems.map((item, idx) => (
-//           <li key={idx}>
-//             <Link
-//               href={item.href}
-//               className={clsx(
-//                 "flex items-center gap-3 px-4 py-2 hover:bg-blue-100 text-gray-700",
-//                 pathname === item.href && "bg-blue-100 font-medium"
-//               )}
-//             >
-//               {item.icon}
-//               {open && <span>{item.name}</span>}
-//             </Link>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
-
-// components/organism/Sidebar.tsx
 "use client";
 
 import { useState } from "react";
@@ -144,7 +62,9 @@ export default function Sidebar() {
               width={32}
               height={32}
             />
-            <span className="text-xl font-bold text-blue-600">TAU LMS</span>
+            <span className="text-xl font-semibold text-[#0a0a0a]">
+              {`${userProfile?.first_name}${" "}${userProfile?.last_name}`}
+            </span>
           </div>
         )}
         <button

@@ -9,6 +9,8 @@ export interface ITask {
   created_at: string;
   updated_at: string;
   class: IClass;
+  media_path?: string;
+  media_url?: string;
 }
 
 export type IResponseTaskList = ITask[];
@@ -18,8 +20,10 @@ export type IResponseTaskDetail = ITask;
 export interface IRequestCreateTask {
   name: string;
   description?: string;
+  media?: File;
   class_id: string;
   deadline?: string;
+  due_date?: string;
 }
 
 export type IResponseCreateTask = ITask;
