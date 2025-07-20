@@ -40,6 +40,19 @@ export const getClassMemberByUserId = ({
   });
 };
 
+export const getClassMemberByClassId = ({
+  activeFilter,
+  classId,
+}: {
+  activeFilter: listFilter;
+  classId?: string;
+}) => {
+  const queryString = QueryString.parse(removeEmptyAttributes(activeFilter));
+  return api.get(`${ENDPOINT.classMembers}/class/${classId}`, {
+    params: { ...queryString },
+  });
+};
+
 export const postClassMember = (payload: IRequestCreateClassMember) => {
   return api.post(`${ENDPOINT.classMembers}`, payload);
 };

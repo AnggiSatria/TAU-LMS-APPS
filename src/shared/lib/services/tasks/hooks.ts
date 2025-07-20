@@ -38,7 +38,7 @@ export const useReadTaskByUserId = ({
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
-    retry: false,
+    retry: true,
     enabled: !!userId,
   });
 };

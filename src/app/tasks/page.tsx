@@ -37,8 +37,6 @@ export default function TaskPage() {
 
   const taskByUserId = dataTaskByUserId?.data;
 
-  console.log(taskByUserId);
-
   const userProfile = profile?.data;
 
   const role = userProfile?.role;
@@ -72,7 +70,7 @@ export default function TaskPage() {
           data-testid="loader"
         />
 
-        {!loading && (
+        {!loading && taskByUserId?.length !== 0 && (
           <ul className="space-y-4">
             {taskByUserId?.map((task: IResponseTaskDetail, idx: number) => (
               <li key={idx} className="bg-white p-4 rounded-xl shadow">
@@ -85,6 +83,29 @@ export default function TaskPage() {
               </li>
             ))}
           </ul>
+        )}
+
+        {!loading && taskByUserId?.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-12 w-12 mb-4 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9.75 9.75h.008v.008H9.75V9.75zm4.5 0h.008v.008h-.008V9.75zM4.5 15a7.5 7.5 0 0115 0v0a3.75 3.75 0 01-7.5 0m-7.5 0a7.5 7.5 0 0115 0v0m-15 0a3.75 3.75 0 017.5 0"
+              />
+            </svg>
+            <p className="text-lg font-medium">No data found</p>
+            <p className="text-sm text-gray-400">
+              Try adjusting your filter or add new data.
+            </p>
+          </div>
         )}
       </main>
     </div>
