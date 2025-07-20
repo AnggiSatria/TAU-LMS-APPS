@@ -10,7 +10,10 @@ const fadeInUp = {
 export default function HeroSectionLP() {
   return (
     <motion.section
-      className="text-center py-20 px-8 bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+      className="text-center py-20 px-8 bg-cover bg-center text-white"
+      style={{
+        backgroundImage: `linear-gradient(rgba(37, 99, 235, 0.8), rgba(79, 70, 229, 0.8)), url("/assets/images/tanry-abeng.jpg")`,
+      }}
       variants={fadeInUp}
       initial="hidden"
       animate="show"

@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Oxygen, Oxygen_Mono } from "next/font/google";
 import "./globals.css";
 import { ReactQueryProvider } from "@/shared/utils/RQueryProviders";
 import ModalProvider from "@/shared/ui/components/organism/Modals";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const oxygenSans = Oxygen({
+  variable: "--font-oxygen-sans",
   subsets: ["latin"],
+  weight: ["300", "400", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const oxygenMono = Oxygen_Mono({
+  variable: "--font-oxygen-mono",
   subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -30,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${oxygenSans.variable} ${oxygenMono.variable} antialiased`}
       >
         <ReactQueryProvider>
           <ModalProvider>{children}</ModalProvider>

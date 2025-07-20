@@ -10,6 +10,7 @@ import { IRequestCreateClass } from "@/shared/lib/interfaces/classes.interface";
 import { useCreateClass } from "@/shared/lib/services/class/hooks";
 import { useCreateClassMember } from "@/shared/lib/services/classMembers/hooks";
 import { IResponseUserDetail } from "@/shared/lib/interfaces/users.interfaces";
+import Button from "../atoms/Button";
 
 const schema = z.object({
   name: z.string().min(3, "Nama kelas minimal 3 karakter"),
@@ -64,20 +65,21 @@ export const CreateClassForm = ({ refetch, profile }: CreateClassFormProps) => {
       />
 
       <div className="flex justify-end gap-2 pt-2">
-        <button
+        <Button
           type="button"
           onClick={hideModal}
-          className="bg-gray-100 px-4 py-2 rounded-md text-gray-700 hover:bg-gray-200 cursor-pointer"
+          styles="bg-gray-100 text-gray-700 hover:bg-gray-200"
         >
+          {" "}
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
           type="submit"
           disabled={isSubmitting}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition cursor-pointer"
+          styles="bg-blue-600 text-white hover:bg-blue-700 transition"
         >
           {isSubmitting ? "Creating..." : "Create"}
-        </button>
+        </Button>
       </div>
     </form>
   );

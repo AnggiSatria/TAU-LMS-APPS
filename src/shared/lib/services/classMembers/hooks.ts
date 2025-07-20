@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { listFilter } from "../../interfaces/filter.interfaces";
 import {
+  getClassMemberByClassId,
   getClassMemberById,
   getClassMemberByUserId,
   getClassMembers,
@@ -57,6 +58,25 @@ export const useReadClassMemberByUserId = ({
     refetchOnReconnect: false,
     retry: false,
     enabled: !!userId,
+  });
+};
+
+export const useReadClassMemberByClassId = ({
+  activeFilter,
+  classId,
+}: {
+  activeFilter: listFilter;
+  classId?: string;
+}) => {
+  return useQuery({
+    queryKey: ["read-class-member-by-class-id", activeFilter, classId],
+    queryFn: async () =>
+      await getClassMemberByClassId({ activeFilter, classId }),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    retry: false,
+    enabled: !!classId,
   });
 };
 
