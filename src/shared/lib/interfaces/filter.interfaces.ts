@@ -1,3 +1,5 @@
 export interface listFilter {
-  search: string;
+  search?: string;
+  per_page?: string | number;
+  page?: string | number;
 }

@@ -66,6 +66,7 @@ export const useUpdatedClass = ({
   id: string | undefined;
   refetch: () => void;
 }) => {
+  const queryClient = useQueryClient();
   const mutations = useMutation({
     mutationFn: async (payload: IRequestUpdateClass) =>
       patchClasses({ payload, id }),
@@ -74,6 +75,11 @@ export const useUpdatedClass = ({
     onSuccess: () => {
       refetch();
       toast(`Updated Class Successfull`);
+
+      queryClient.refetchQueries({
+        queryKey: ["read-classes"],
+        exact: false,
+      });
     },
     onError: (err: any) => {
       toast(err.response.data.message);
@@ -84,7 +90,7 @@ export const useUpdatedClass = ({
 };
 
 export const useDeletedClass = ({ refetch }: { refetch: () => void }) => {
-  const queryClient = useQueryClient(); // <== tambahkan ini
+  const queryClient = useQueryClient();
   const mutations = useMutation({
     mutationFn: async (id?: string) => deletedClasses({ id }),
     mutationKey: ["deleted-class"],
@@ -93,6 +99,11 @@ export const useDeletedClass = ({ refetch }: { refetch: () => void }) => {
       refetch();
       queryClient.refetchQueries({
         queryKey: ["read-task-by-user-id"],
+        exact: false,
+      });
+
+      queryClient.refetchQueries({
+        queryKey: ["read-classes"],
         exact: false,
       });
 

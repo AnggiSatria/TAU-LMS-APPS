@@ -15,6 +15,19 @@ export const getTasks = ({ activeFilter }: { activeFilter: listFilter }) => {
   });
 };
 
+export const getTaskById = ({
+  activeFilter,
+  id,
+}: {
+  activeFilter: listFilter;
+  id: string;
+}) => {
+  const queryString = QueryString.parse(removeEmptyAttributes(activeFilter));
+  return api.get(`${ENDPOINT.tasks}/${id}`, {
+    params: { ...queryString },
+  });
+};
+
 export const getTaskByUserId = ({
   activeFilter,
   userId,
@@ -71,10 +84,16 @@ export const postTask = (payload: IRequestCreateTask) => {
   });
 };
 
-export const patchTask = (payload: IRequestUpdateTask) => {
-  return api.patch(`${ENDPOINT.tasks}`, payload);
+export const patchTask = ({
+  payload,
+  id,
+}: {
+  payload: IRequestUpdateTask;
+  id: string;
+}) => {
+  return api.patch(`${ENDPOINT.tasks}/${id}`, payload);
 };
 
-export const deleteTask = (id: string) => {
+export const deleteTask = (id?: string) => {
   return api.delete(`${ENDPOINT.tasks}/${id}`);
 };

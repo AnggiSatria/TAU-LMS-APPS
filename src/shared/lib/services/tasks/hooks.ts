@@ -1,13 +1,19 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { listFilter } from "../../interfaces/filter.interfaces";
 import {
+  deleteTask,
   getTaskByClassAndUserId,
   getTaskByClassId,
+  getTaskById,
   getTaskByUserId,
   getTasks,
+  patchTask,
   postTask,
 } from "./fetcher";
-import { IRequestCreateTask } from "../../interfaces/tasks.interfaces";
+import {
+  IRequestCreateTask,
+  IRequestUpdateTask,
+} from "../../interfaces/tasks.interfaces";
 import { toast } from "sonner";
 
 export const useReadTasks = ({
@@ -22,6 +28,24 @@ export const useReadTasks = ({
     refetchOnMount: false,
     refetchOnReconnect: false,
     retry: false,
+  });
+};
+
+export const useReadTaskById = ({
+  activeFilter,
+  id,
+}: {
+  activeFilter: listFilter;
+  id: string;
+}) => {
+  return useQuery({
+    queryKey: ["read-task-by-id", activeFilter, id],
+    queryFn: async () => await getTaskById({ activeFilter, id }),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    retry: false,
+    enabled: !!id,
   });
 };
 
@@ -91,6 +115,53 @@ export const useCreateTask = ({ refetch }: { refetch: () => void }) => {
       toast(`Create Task Successfull`);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (err: any) => {
+      toast(err.response.data.message);
+    },
+  });
+
+  return { mutations };
+};
+
+export const useUpdatedTask = ({
+  refetch,
+  id,
+}: {
+  refetch: () => void;
+  id: string;
+}) => {
+  const mutations = useMutation({
+    mutationFn: async (payload: IRequestUpdateTask) =>
+      patchTask({ payload: payload, id: id }),
+    mutationKey: ["updated-task"],
+    onSuccess: () => {
+      refetch();
+      toast(`Updated Task Successfull`);
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (err: any) => {
+      toast(err.response.data.message);
+    },
+  });
+
+  return { mutations };
+};
+
+export const useDeletedTask = ({ refetch }: { refetch: () => void }) => {
+  const queryClient = useQueryClient();
+  const mutations = useMutation({
+    mutationFn: async (id?: string) => deleteTask(id),
+    mutationKey: ["deleted-class"],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onSuccess: () => {
+      refetch();
+      queryClient.refetchQueries({
+        queryKey: ["read-classes"],
+        exact: false,
+      });
+
+      toast(`Deleted Class Successfull`);
+    },
     onError: (err: any) => {
       toast(err.response.data.message);
     },
