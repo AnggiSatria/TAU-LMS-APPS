@@ -1,9 +1,9 @@
 import { SearchInput } from "../atoms/SearchInput";
 
-export const SearchBar = () => {
+export const SearchBar = ({ placeHolder }: { placeHolder?: string }) => {
   return (
     <div className="w-full">
-      <SearchInput />
+      <SearchInput placeHolder={placeHolder} />
     </div>
   );
 };

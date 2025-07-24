@@ -12,6 +12,8 @@ import dayjs from "dayjs";
 import { CSSProperties } from "react";
 import { ClockLoader } from "react-spinners";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { GlobalSearch } from "@/shared/ui/components/organism/GlobalSearch";
+import { useSearchStore } from "@/shared/store/useSearchStore";
 
 const override: CSSProperties = {
   display: "block",
@@ -20,6 +22,7 @@ const override: CSSProperties = {
 };
 
 export default function TaskPage() {
+  const { keyword } = useSearchStore();
   const { showModal } = useModal();
   const activeFilter = {
     search: "",
@@ -34,7 +37,7 @@ export default function TaskPage() {
     refetch,
     isLoading: loading,
   } = useReadTaskByUserId({
-    activeFilter: { search: "" },
+    activeFilter: { search: keyword },
     userId: profile?.data?.id,
   });
 
@@ -60,14 +63,22 @@ export default function TaskPage() {
       <main className="flex-1 p-6">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-gray-800 mb-6">List Task</h1>
-          {role === "teacher" && (
-            <Button
-              onClick={handleCreateTask}
-              styles="bg-blue-600 text-white hover:bg-blue-700 transition"
+
+          <div className="flex gap-3">
+            <div
+              className={`flex ${role === "teacher" ? `w-[53.5%]` : `w-full`}`}
             >
-              + Create Task
-            </Button>
-          )}
+              <GlobalSearch placeHolder="Cari Tugas..." />
+            </div>
+            {role === "teacher" && (
+              <Button
+                onClick={handleCreateTask}
+                styles="bg-blue-600 text-white hover:bg-blue-700 transition"
+              >
+                + Create Task
+              </Button>
+            )}
+          </div>
         </div>
 
         <ClockLoader
