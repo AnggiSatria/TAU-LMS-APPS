@@ -18,6 +18,7 @@ import { IRequestCreateStudent } from "@/shared/lib/interfaces/students.interfac
 import { IRequestCreateTeacher } from "@/shared/lib/interfaces/teachers.interfaces";
 import { Toaster } from "sonner";
 import Cookies from "js-cookie";
+import Button from "@/shared/ui/components/atoms/Button";
 
 const override: CSSProperties = {
   display: "block",
@@ -175,9 +176,9 @@ export default function page() {
             />
           )}
 
-          <button
+          <Button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+            styles="w-full bg-blue-600 text-white hover:bg-blue-700 transition"
             disabled={loading}
           >
             {loading ? (
@@ -192,7 +193,7 @@ export default function page() {
             ) : (
               "Register"
             )}
-          </button>
+          </Button>
 
           <span className="flex mt-3 w-full gap-1.5">
             Do you have an account?{" "}

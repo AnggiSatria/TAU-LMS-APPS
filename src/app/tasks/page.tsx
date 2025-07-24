@@ -2,13 +2,16 @@
 import { IResponseTaskDetail } from "@/shared/lib/interfaces/tasks.interfaces";
 import { useReadTaskByUserId } from "@/shared/lib/services/tasks/hooks";
 import { useReadUserProfile } from "@/shared/lib/services/users/hooks";
-// app/tugas/page.tsx
+import Button from "@/shared/ui/components/atoms/Button";
 import Sidebar from "@/shared/ui/components/organism";
 import { CreateTaskForm } from "@/shared/ui/components/template/CreateTaskForm";
+import { UpdatedTaskForm } from "@/shared/ui/components/template/UpdatedTaskFrom";
 import { useModal } from "@/shared/ui/context/ModalContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import { CSSProperties } from "react";
 import { ClockLoader } from "react-spinners";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
 const override: CSSProperties = {
   display: "block",
@@ -41,8 +44,14 @@ export default function TaskPage() {
 
   const role = userProfile?.role;
 
-  const handleCreateClass = () => {
+  const handleCreateTask = () => {
     showModal(<CreateTaskForm refetch={refetch} profile={userProfile} />);
+  };
+
+  const handleUpdatedTask = (id: string) => {
+    showModal(
+      <UpdatedTaskForm id={id} refetch={refetch} profile={userProfile} />
+    );
   };
 
   return (
@@ -52,12 +61,12 @@ export default function TaskPage() {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-gray-800 mb-6">List Task</h1>
           {role === "teacher" && (
-            <button
-              onClick={handleCreateClass}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-semibold cursor-pointer"
+            <Button
+              onClick={handleCreateTask}
+              styles="bg-blue-600 text-white hover:bg-blue-700 transition"
             >
               + Create Task
-            </button>
+            </Button>
           )}
         </div>
 
@@ -73,14 +82,28 @@ export default function TaskPage() {
         {!loading && taskByUserId?.length !== 0 && (
           <ul className="space-y-4">
             {taskByUserId?.map((task: IResponseTaskDetail, idx: number) => (
-              <li key={idx} className="bg-white p-4 rounded-xl shadow">
-                <h2 className="text-lg font-semibold text-blue-600">
-                  {task?.name}
-                </h2>
-                <p className="text-sm text-gray-600">
-                  Deadline: {dayjs(task?.due_date).format(`DD MMMM YYYY`)}
-                </p>
-              </li>
+              <div
+                key={idx}
+                className="bg-white p-4 rounded-xl shadow hover:shadow-lg flex"
+              >
+                <div className="flex w-11/12 flex-col">
+                  <h2 className="text-lg font-semibold text-blue-600">
+                    {task?.name} - {task?.class?.name}
+                  </h2>
+                  <p className="text-sm text-gray-600">
+                    Deadline: {dayjs(task?.due_date).format(`DD MMMM YYYY`)}
+                  </p>
+                </div>
+                {role === "teacher" && (
+                  <div className="flex w-1/12">
+                    <FontAwesomeIcon
+                      icon={faPenToSquare}
+                      className="hover:text-blue-600 transition cursor-pointer"
+                      onClick={() => handleUpdatedTask(task?.id)}
+                    />
+                  </div>
+                )}
+              </div>
             ))}
           </ul>
         )}

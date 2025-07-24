@@ -8,30 +8,32 @@ import { useModal } from "@/shared/ui/context/ModalContext";
 import { IResponseUserDetail } from "@/shared/lib/interfaces/users.interfaces";
 import { AsyncSelectController } from "../organism/AsyncSelectController";
 import { useReadClassMemberByUserId } from "@/shared/lib/services/classMembers/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { IClassMemberByUserId } from "@/shared/lib/interfaces/class-members.interface";
 import { InputTextArea } from "../atoms/InputTextArea";
 import { InputFileController } from "../atoms/InputFileController";
 import { InputDateController } from "../organism/InputDateController";
-import { useCreateTask } from "@/shared/lib/services/tasks/hooks";
-import { IRequestCreateTask } from "@/shared/lib/interfaces/tasks.interfaces";
+import {
+  useDeletedTask,
+  useReadTaskById,
+  useUpdatedTask,
+} from "@/shared/lib/services/tasks/hooks";
+import { IRequestUpdateTask } from "@/shared/lib/interfaces/tasks.interfaces";
 import Button from "../atoms/Button";
+import DeletedModalNotification from "./DeletedModalNotification";
 
 const formSchema = z.object({
-  name: z.string().min(3, "Nama kelas minimal 3 karakter"),
-  description: z.string().min(1, "Deskripsi tugas minimal 1 karakter"),
-  class_id: z.object(
-    {
-      label: z.string(),
-      value: z.string(),
-    },
-    { required_error: "Harap pilih kelas" }
-  ),
+  name: z.string(),
+  description: z.string(),
+  class_id: z.object({
+    label: z.string(),
+    value: z.string(),
+  }),
   media: z
     .instanceof(File)
     .refine((file) => file.size > 0, "File tidak boleh kosong")
-    .optional(), // optional jika tidak wajib
+    .optional(),
   due_date: z
     .date({
       required_error: "Tanggal wajib diisi",
@@ -51,21 +53,27 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-interface CreateTaskFormProps {
+interface UpdatedTaskFormProps {
   refetch: () => void;
   profile: IResponseUserDetail;
+  id: string;
 }
 
-export const CreateTaskForm = ({ refetch, profile }: CreateTaskFormProps) => {
+export const UpdatedTaskForm = ({
+  refetch,
+  profile,
+  id,
+}: UpdatedTaskFormProps) => {
+  const { showModal, hideModal } = useModal();
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
-  const { hideModal } = useModal();
 
   const {
     register,
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
+    setValue,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
@@ -88,10 +96,22 @@ export const CreateTaskForm = ({ refetch, profile }: CreateTaskFormProps) => {
     );
   };
 
-  const { mutations: taskMutations } = useCreateTask({ refetch: refetch });
+  const { mutations: taskMutations } = useUpdatedTask({
+    refetch: refetch,
+    id: id,
+  });
+
+  const { mutations: mutationDeletedTask } = useDeletedTask({ refetch });
+
+  const { data: getTaskById } = useReadTaskById({
+    activeFilter: { search: "" },
+    id: id,
+  });
+
+  const TaskById = getTaskById?.data;
 
   const onSubmit = async (data: FormData) => {
-    const payload: IRequestCreateTask = {
+    const payload: IRequestUpdateTask = {
       ...data,
       class_id: data?.class_id?.value,
       due_date: data.due_date.toISOString().slice(0, 19).replace("T", " "),
@@ -100,9 +120,36 @@ export const CreateTaskForm = ({ refetch, profile }: CreateTaskFormProps) => {
     hideModal();
   };
 
+  const onDeleted = async () => {
+    await mutationDeletedTask.mutateAsync(id);
+    hideModal();
+  };
+
+  const handleModalDeleted = () => {
+    showModal(
+      <DeletedModalNotification
+        title="Are you sure you want to delete this class?"
+        onCancel={hideModal}
+        onConfirm={onDeleted}
+      />
+    );
+  };
+
+  useEffect(() => {
+    setValue("name", TaskById?.name);
+    setValue("description", TaskById?.description);
+    setValue("class_id", {
+      label: TaskById?.class?.name,
+      value: TaskById?.class?.id,
+    });
+    if (TaskById?.due_date) {
+      setValue("due_date", new Date(TaskById.due_date));
+    }
+  }, [TaskById, setValue]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <h2 className="text-xl font-bold">Create New Task</h2>
+      <h2 className="text-xl font-bold">Updated Task</h2>
 
       <InputText
         label="Task Name"
@@ -143,17 +190,17 @@ export const CreateTaskForm = ({ refetch, profile }: CreateTaskFormProps) => {
       <div className="flex justify-end gap-2 pt-2">
         <Button
           type="button"
-          onClick={hideModal}
-          styles="bg-gray-100 text-gray-700 hover:bg-gray-200"
+          onClick={handleModalDeleted}
+          styles="bg-red-500 text-white hover:bg-red-700"
         >
-          Cancel
+          Delete
         </Button>
         <Button
           type="submit"
           disabled={isSubmitting}
           styles="bg-blue-600 text-white hover:bg-blue-700 transition"
         >
-          {isSubmitting ? "Creating..." : "Create"}
+          {isSubmitting ? "Updated..." : "Updated"}
         </Button>
       </div>
     </form>

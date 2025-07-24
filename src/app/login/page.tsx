@@ -12,6 +12,7 @@ import { Toaster, toast } from "sonner";
 import { useLogin } from "@/shared/lib/services/auth/login/hooks";
 import { BeatLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
+import Button from "@/shared/ui/components/atoms/Button";
 
 const override: CSSProperties = {
   display: "block",
@@ -91,9 +92,9 @@ export default function LoginPage() {
             error={errors.password}
           />
 
-          <button
+          <Button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition cursor-pointer"
+            styles="w-full bg-blue-600 text-white hover:bg-blue-700 transition"
             disabled={loading}
           >
             {loading ? (
@@ -108,7 +109,7 @@ export default function LoginPage() {
             ) : (
               "Login"
             )}
-          </button>
+          </Button>
 
           <span className="flex mt-3 w-full gap-1.5">
             Don't have an account?{" "}

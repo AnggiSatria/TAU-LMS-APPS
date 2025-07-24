@@ -31,8 +31,10 @@ export type IResponseCreateTask = ITask;
 export interface IRequestUpdateTask {
   name?: string;
   description?: string;
+  media?: File;
   class_id?: string;
   deadline?: string;
+  due_date?: string;
 }
 
 export type IResponseUpdateTask = ITask;
