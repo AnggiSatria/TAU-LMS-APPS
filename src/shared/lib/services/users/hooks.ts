@@ -35,14 +35,10 @@ export const useReadUserById = ({
   });
 };
 
-export const useReadUserProfile = ({
-  activeFilter,
-}: {
-  activeFilter: listFilter;
-}) => {
+export const useReadUserProfile = ({}: {}) => {
   return useQuery({
     queryKey: ["read-user-profile"],
-    queryFn: async () => await getUserProfile({ activeFilter }),
+    queryFn: async () => await getUserProfile({}),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,

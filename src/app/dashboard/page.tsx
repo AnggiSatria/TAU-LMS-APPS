@@ -12,7 +12,7 @@ export default function DashboardPage() {
             Dashboard
           </h1>
           <div className="flex w-1/2">
-            <GlobalSearch />
+            <GlobalSearch placeHolder="Search Classes..." />
           </div>
         </div>
 

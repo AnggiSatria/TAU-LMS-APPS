@@ -81,7 +81,7 @@ export const CreateTaskForm = ({ refetch, profile }: CreateTaskFormProps) => {
     setSearch(inputValue);
 
     return (
-      clasess?.data?.map((item: IClassMemberByUserId) => ({
+      clasess?.map((item: IClassMemberByUserId) => ({
         label: item?.name,
         value: item?.id,
       })) || []

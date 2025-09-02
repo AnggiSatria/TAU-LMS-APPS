@@ -20,7 +20,7 @@ export const getTaskById = ({
   id,
 }: {
   activeFilter: listFilter;
-  id: string;
+  id: string | null;
 }) => {
   const queryString = QueryString.parse(removeEmptyAttributes(activeFilter));
   return api.get(`${ENDPOINT.tasks}/${id}`, {

@@ -20,11 +20,10 @@ export const getUserById = ({
   return api.get(`${ENDPOINT.users}/${id}`, { params: { ...queryString } });
 };
 
-export const getUserProfile = ({
-  activeFilter,
-}: {
-  activeFilter: listFilter;
-}) => {
-  const queryString = QueryString.parse(removeEmptyAttributes(activeFilter));
-  return api.get(ENDPOINT.profile, { params: { ...queryString } });
+export const getUserProfile = ({ token }: { token?: string }) => {
+  return api.get(ENDPOINT.profile, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+  });
 };
