@@ -44,11 +44,7 @@ export default function ClassesPage() {
   });
   const { showModal } = useModal();
 
-  const { data: profile } = useReadUserProfile({
-    activeFilter: {
-      search: "",
-    },
-  });
+  const { data: profile } = useReadUserProfile({});
 
   const userProfile = profile?.data;
 
@@ -95,7 +91,7 @@ export default function ClassesPage() {
             <div
               className={`flex ${role === "teacher" ? `w-[53.5%]` : `w-full`}`}
             >
-              <GlobalSearch />
+              <GlobalSearch placeHolder="Search Classes..." />
             </div>
             {role === "teacher" && (
               <Button

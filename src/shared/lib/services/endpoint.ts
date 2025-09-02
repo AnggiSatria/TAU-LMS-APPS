@@ -8,6 +8,7 @@ export const ENDPOINT = {
   classes: "/classes",
   classMembers: "/class-members",
   tasks: "/tasks",
+  taskSubmissions: "/task-submissions",
   assignments: "/assignments",
   profile: "/profile",
 };

@@ -36,7 +36,7 @@ export const useReadTaskById = ({
   id,
 }: {
   activeFilter: listFilter;
-  id: string;
+  id: string | null;
 }) => {
   return useQuery({
     queryKey: ["read-task-by-id", activeFilter, id],

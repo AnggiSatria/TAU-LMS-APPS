@@ -1,3 +1,4 @@
+import { ITaskSubmission } from "./task-submissions.interface";
 import { ITask } from "./tasks.interfaces";
 import { IUser } from "./users.interfaces";
 
@@ -19,7 +20,7 @@ export type IResponseAssignmentDetail = IAssignment;
 
 export interface IRequestCreateAssignment {
   user_id: string;
-  task_id: string;
+  task_id: string | null;
   score?: number;
   submitted_at?: string;
 }
@@ -36,3 +37,7 @@ export interface IRequestUpdateAssignment {
 export type IResponseUpdateAssignment = IAssignment;
 
 export type IResponseDeleteAssignment = null;
+
+export interface ISubmissionWithAssignment extends ITaskSubmission {
+  assignment?: IAssignment | null;
+}
